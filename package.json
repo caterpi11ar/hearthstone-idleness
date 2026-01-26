@@ -21,6 +21,9 @@
     "lint:fix": "eslint --ext .ts --fix  --cache .",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "playwright": "^1.58.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^7.2.0",
     "@commitlint/cli": "^20.3.1",

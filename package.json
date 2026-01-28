@@ -1,9 +1,9 @@
 {
-  "name": "Idleness",
+  "name": "hearthstone-idleness",
   "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@10.27.0",
-  "description": "基于图像识别的自动化浏览器框架",
+  "description": "基于Overwolf的炉石传说自动化框架",
   "author": {
     "name": "caterpi11ar",
     "email": "daiqin1046@gmail.com"
@@ -20,9 +20,6 @@
     "prepare": "husky",
     "lint:fix": "eslint --ext .ts --fix  --cache .",
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "playwright": "^1.58.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.2.0",

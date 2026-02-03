@@ -22,7 +22,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "rsshub": "1.0.0-master.07cd821"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.2.0",

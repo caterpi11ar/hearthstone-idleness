@@ -2,10 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
-
-基于 RSS + MCP 的自动化内容运营框架。通过 RSSHub 抓取内容，AI 改写后发布到小红书等自媒体平台。
-
 ## Commands
 
 ```bash
@@ -14,10 +10,6 @@ pnpm lint:fix     # Lint 并自动修复
 pnpm typecheck    # 类型检查
 ```
 
-## Architecture
-
-```
-RSS源 → RSSHub抓取 → AI改写(Claude) → MCP发布(小红书等)
 ```
 
 ## Technical Stack

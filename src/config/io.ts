@@ -7,15 +7,15 @@ import process from 'node:process'
 import json5 from 'json5'
 import { IdlenessSchema } from './zod-schema'
 
-export function createConfigIO() {
-  const configPath = join(homedir(), '.idleness', 'config.json')
+export class ConfigIO {
+  configPath = join(homedir(), '.idleness', 'config.json')
 
-  function loadConfig(): IdlenessConfig {
-    if (!existsSync(configPath)) {
+  loadConfig(): IdlenessConfig {
+    if (!existsSync(this.configPath)) {
       return {}
     }
 
-    const raw = readFileSync(configPath, 'utf-8')
+    const raw = readFileSync(this.configPath, 'utf-8')
     const parsed = json5.parse(raw)
 
     /** zod 验证 */
@@ -24,7 +24,7 @@ export function createConfigIO() {
     return validated.success ? validated.data : {}
   }
 
-  async function writeConfigFile(config: IdlenessConfig) {
+  async writeConfigFile(config: IdlenessConfig) {
     /** 写入前先验证 */
     const validated = IdlenessSchema.safeParse(config)
 
@@ -32,7 +32,7 @@ export function createConfigIO() {
       throw new Error('Invalid config')
     }
 
-    const dir = dirname(configPath)
+    const dir = dirname(this.configPath)
 
     const json = json5.stringify(validated.data, null, 2)
       .trimEnd()
@@ -40,28 +40,28 @@ export function createConfigIO() {
 
     const tmp = join(
       dir,
-      `${basename(configPath)}.${process.pid}.${crypto.randomUUID()}.tmp`,
+      `${basename(this.configPath)}.${process.pid}.${crypto.randomUUID()}.tmp`,
     )
 
     /** 写入临时文件确保权限设置正确 0o600 只允许文件所有者对文件进行读写操作 */
     await writeFile(tmp, json, { encoding: 'utf-8', mode: 0o600 })
 
-    if (existsSync(configPath)) {
+    if (existsSync(this.configPath)) {
       /** 备份原文件 */
-      await copyFile(configPath, `${configPath}.bak`).catch(() => {
+      await copyFile(this.configPath, `${this.configPath}.bak`).catch(() => {
         // best-effort
       })
     }
 
     try {
-      await rename(tmp, configPath)
+      await rename(tmp, this.configPath)
     }
     catch (err) {
       const code = (err as { code?: string }).code
       // Windows doesn't reliably support atomic replace via rename when dest exists.
       if (code === 'EPERM' || code === 'EEXIST') {
-        await copyFile(tmp, configPath)
-        await chmod(configPath, 0o600).catch(() => {
+        await copyFile(tmp, this.configPath)
+        await chmod(this.configPath, 0o600).catch(() => {
           // best-effort
         })
         await unlink(tmp).catch(() => {
@@ -75,13 +75,6 @@ export function createConfigIO() {
       throw err
     }
   }
-
-  return {
-    configPath,
-    loadConfig,
-
-    writeConfigFile,
-  }
 }
 
-export const configIO = createConfigIO()
+export const configIO = new ConfigIO()
